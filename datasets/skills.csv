@@ -1,0 +1,50 @@
+category,skill_name
+Programming,Python
+Programming,Java
+Programming,C++
+Programming,JavaScript
+Programming,TypeScript
+Programming,SQL
+Programming,R
+Programming,Go
+Web Development,HTML
+Web Development,CSS
+Web Development,React
+Web Development,Node.js
+Web Development,Django
+Web Development,Flask
+Web Development,Streamlit
+Web Development,FastAPI
+Machine Learning,Scikit-Learn
+Machine Learning,TensorFlow
+Machine Learning,PyTorch
+Machine Learning,Keras
+Machine Learning,Random Forest
+Machine Learning,XGBoost
+Data Science,Pandas
+Data Science,NumPy
+Data Science,Matplotlib
+Data Science,Seaborn
+Data Science,Plotly
+NLP,spaCy
+NLP,NLTK
+NLP,Transformers
+NLP,Sentence Transformers
+NLP,BERT
+NLP,TF-IDF
+Cloud & DevOps,Docker
+Cloud & DevOps,Kubernetes
+Cloud & DevOps,AWS
+Cloud & DevOps,Azure
+Cloud & DevOps,Git
+Cloud & DevOps,CI/CD
+Databases,MySQL
+Databases,PostgreSQL
+Databases,MongoDB
+Databases,SQLite
+Databases,Redis
+Soft Skills,Communication
+Soft Skills,Problem Solving
+Soft Skills,Teamwork
+Soft Skills,Leadership
+Soft Skills,Time Management

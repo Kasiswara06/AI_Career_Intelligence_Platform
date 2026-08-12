@@ -1,0 +1,9 @@
+course_title,provider,level,skills_covered,url
+Python for Everybody,Coursera,Beginner,"Python, Data Structures, Web Scraping",https://coursera.org/specializations/python
+Machine Learning Specialization,DeepLearning.AI,Intermediate,"Python, Scikit-Learn, Machine Learning, Neural Networks",https://coursera.org/specializations/machine-learning-introduction
+Applied Data Science with Python,University of Michigan,Intermediate,"Pandas, NumPy, Matplotlib, Data Analysis",https://coursera.org/specializations/data-science
+Natural Language Processing Specialization,DeepLearning.AI,Advanced,"NLP, NLTK, Transformers, Sentiment Analysis",https://coursera.org/specializations/natural-language-processing
+Complete React Developer,Udemy,Beginner-Intermediate,"React, JavaScript, HTML, CSS, Redux",https://udemy.com
+Docker and Kubernetes: The Complete Guide,Udemy,Intermediate,"Docker, Kubernetes, DevOps, CI/CD",https://udemy.com
+SQL for Data Analytics,Udacity,Beginner,"SQL, MySQL, PostgreSQL, Relational Databases",https://udacity.com
+Streamlit Web App Development,Pluralsight,Beginner,"Python, Streamlit, Plotly, Dashboarding",https://pluralsight.com
