@@ -1,0 +1,29 @@
+TAMMINENI KASISWARA REDDY
+kasiswara9392@gmail.com | 9392014945 | Chittoor, India
+LinkedIn: https://github.com/Kasiswara06 | GitHub: https://github.com/Kasiswara06
+============================================================
+
+PROFESSIONAL SUMMARY
+--------------------
+Goal-oriented CSE - AI&DS graduate specializing in AI Engineer with strong hands-on expertise in AI, Python, Data analytics. Proven ability in developing robust data-driven solutions and optimizing technical workflows. Seeking a challenging role as a AI Engineer to apply machine learning and software engineering skills to solve real-world industry problems.
+
+TECHNICAL SKILLS
+----------------
+• Programming: Python
+• Other: AI, Data analytics
+
+EDUCATION
+---------
+B.Tech in CSE - AI&DS
+The Apollo University
+CGPA/Percentage: 9.02 | Graduation Year: 2027
+
+PROFESSIONAL EXPERIENCE
+-----------------------
+Artificial Intelliegence  - Intership | Infosys
+• Developed and optimized core features using scalable software patterns.
+• Collaborated with cross-functional teams to integrate backend workflows.
+
+CERTIFICATIONS
+--------------
+• Google Cloud Engineering Certificate – Google Cloud
