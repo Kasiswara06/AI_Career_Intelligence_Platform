@@ -1,0 +1,24 @@
+id,domain,job_role,difficulty,question,category
+1,Python Development,Python Developer,Easy,What are Python's built-in data types and how do mutable vs immutable types differ?,Technical
+2,Python Development,Python Developer,Medium,Explain decorators in Python and how classmethod differs from staticmethod.,Technical
+3,Python Development,Python Developer,Hard,How does Python memory management work under the hood (Reference Counting and GC)?,Technical
+4,Data Science,Data Scientist,Easy,What is data preprocessing and why is it critical in the Data Science pipeline?,Technical
+5,Data Science,Data Scientist,Medium,Explain feature engineering techniques for numerical and categorical attributes.,Technical
+6,Data Science,Data Scientist,Hard,How would you handle a severely imbalanced dataset in a fraud detection project?,Scenario-Based
+7,Machine Learning,ML Engineer,Easy,What is the core difference between Supervised and Unsupervised Machine Learning?,Technical
+8,Machine Learning,ML Engineer,Medium,Explain Random Forest algorithm and how it prevents overfitting compared to a single Decision Tree.,Technical
+9,Machine Learning,ML Engineer,Hard,How does XGBoost differ from Random Forest in tree building and loss optimization?,Technical
+10,SQL / Database,Database Developer,Easy,What is the logical execution order of SQL SELECT statements?,Technical
+11,SQL / Database,Database Developer,Medium,Explain SQL JOIN types (INNER, LEFT, RIGHT, FULL OUTER) with examples.,Technical
+12,SQL / Database,Database Developer,Hard,Explain Database Normalization (1NF to 3NF) vs Denormalization and ACID Properties.,Technical
+13,Web Development,Full Stack Developer,Easy,Explain client-server architecture, HTTP protocol methods, and REST API design principles.,Technical
+14,Web Development,Full Stack Developer,Medium,Explain Virtual DOM in React and how Reconciliation works under the hood.,Technical
+15,Web Development,Full Stack Developer,Hard,How do you implement JWT Authentication & Authorization securely across Frontend and Backend?,Scenario-Based
+16,Artificial Intelligence,AI Engineer,Easy,What is Artificial Intelligence vs Machine Learning vs Deep Learning vs Generative AI?,Technical
+17,Artificial Intelligence,AI Engineer,Medium,Explain Transformer Architecture (Self-Attention mechanism, Positional Encodings).,Technical
+18,Artificial Intelligence,AI Engineer,Hard,Explain Retrieval-Augmented Generation (RAG) architecture and Prompt Engineering strategies for LLMs.,Scenario-Based
+19,Java Development,Java Developer,Medium,Explain Java Garbage Collection and memory management in JVM (Young, Old, Metaspace).,Technical
+20,DevOps,DevOps Engineer,Medium,Explain Docker containerization vs Virtual Machines and how Kubernetes manages pods.,Technical
+21,Cloud Computing,Cloud Engineer,Medium,Explain AWS S3, EC2, Lambda serverless architecture and IAM policies.,Technical
+22,Cyber Security,Security Engineer,Hard,How do you protect against OWASP Top 10 vulnerabilities like SQL Injection and XSS?,Technical
+23,Data Engineering,Data Engineer,Hard,Explain ETL vs ELT pipelines and how Apache Spark processes distributed big data.,Technical

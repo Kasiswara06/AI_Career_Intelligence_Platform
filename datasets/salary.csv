@@ -1,0 +1,15 @@
+experience_years,education_level,skill_count,project_count,role,salary_lpa
+0,Bachelor,3,2,Junior Software Engineer,4.5
+0.5,Bachelor,4,3,Python Developer,5.2
+1,Bachelor,5,3,Software Engineer,6.0
+1.5,Bachelor,6,4,Full Stack Developer,7.2
+2,Bachelor,7,4,Data Analyst,7.8
+2.5,Master,8,5,Data Scientist,10.5
+3,Bachelor,8,5,Python Developer,11.0
+3.5,Master,9,6,Data Scientist,13.2
+4,Bachelor,10,6,AI Engineer,14.5
+4.5,Master,11,7,Machine Learning Engineer,16.8
+5,Master,12,8,Senior Data Scientist,19.0
+6,Bachelor,13,8,Senior Software Engineer,21.5
+7,Master,14,9,Lead AI Engineer,25.0
+8,Master,15,10,Principal Architect,30.0
