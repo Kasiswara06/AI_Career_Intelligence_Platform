@@ -1,0 +1,94 @@
+/* Glassmorphism & Modern Styling for AI Career Intelligence Platform */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body, .stApp, p, h1, h2, h3, h4, h5, h6, input, button, select, textarea, .stMarkdown {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Primary Glassmorphism Container Styling */
+.stApp {
+    background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%);
+    color: #F8FAFC;
+}
+
+/* Glass Card Component */
+.glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.2);
+}
+
+/* Gradient Hero Heading */
+.gradient-text {
+    background: linear-gradient(90deg, #818CF8 0%, #C084FC 50%, #38BDF8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Stat Box Badge */
+.stat-box {
+    background: rgba(15, 23, 42, 0.6);
+    border-left: 4px solid #6366F1;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
+}
+
+/* Button Customizations */
+.stButton > button {
+    background: linear-gradient(90deg, #6366F1 0%, #4F46E5 100%);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+}
+
+.stButton > button:hover {
+    background: linear-gradient(90deg, #4F46E5 0%, #4338CA 100%);
+    box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.6);
+    transform: translateY(-1px);
+}
+
+/* Sidebar Custom Styling */
+section[data-testid="stSidebar"] {
+    background-color: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Expander Layout & Icon Overlap Fix */
+details[data-testid="stExpander"] {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+    overflow: hidden !important;
+}
+
+details[data-testid="stExpander"] summary {
+    display: flex !important;
+    align-items: center !important;
+    padding: 12px 16px !important;
+    gap: 12px !important;
+}
+
+details[data-testid="stExpander"] summary > div,
+details[data-testid="stExpander"] summary p,
+details[data-testid="stExpander"] summary span {
+    margin-left: 6px !important;
+    padding-left: 6px !important;
+}

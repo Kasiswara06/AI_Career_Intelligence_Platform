@@ -1,0 +1,17 @@
+/* Login & Auth Styles */
+.auth-box {
+    max-width: 450px;
+    margin: 2rem auto;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 16px;
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+.auth-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #f8fafc;
+}

@@ -1,0 +1,39 @@
+/* Home Page Custom Styles */
+.hero-container {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    color: #ffffff;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+}
+
+.feature-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #38bdf8;
+}
