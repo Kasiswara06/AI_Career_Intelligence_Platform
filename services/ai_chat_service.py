@@ -35,7 +35,7 @@ def fetch_session_conversation(user_id: int, session_id: str) -> List[Dict[str, 
     """Fetches messages for session."""
     return get_chat_session_messages(user_id, session_id)
 
-def get_session_export_data(session_title: str, messages: List[Dict[str, Any]]) -> Tuple_Or_Dict:
+def get_session_export_data(session_title: str, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Generates TXT and PDF export payloads."""
     txt = export_chat_to_txt(session_title, messages)
     pdf_bytes = export_chat_to_pdf(session_title, messages)

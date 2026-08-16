@@ -87,3 +87,18 @@ def generate_learning_roadmap(missing_skills: list) -> list:
             "action": "Complete 10 mock interview sessions and update resume."
         }
     ]
+
+def get_learning_recommendations(missing_skills: list = None) -> list:
+    """Returns recommended courses formatted for learning recommendation components."""
+    courses = get_recommended_courses(missing_skills)
+    formatted = []
+    for c in courses:
+        formatted.append({
+            "course_title": c.get("course_name") or c.get("course_title", "Online Masterclass"),
+            "provider": c.get("platform") or c.get("provider", "E-Learning Platform"),
+            "level": c.get("difficulty") or c.get("level", "Intermediate"),
+            "skills_covered": c.get("skills_covered", "Technical Skills"),
+            "url": c.get("link") or c.get("url", "#"),
+            "duration": c.get("duration", "4 Weeks")
+        })
+    return formatted

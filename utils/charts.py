@@ -419,4 +419,8 @@ def create_market_salary_comparison_chart(candidate_lpa: float = 8.5, market_avg
     )
     return fig
 
+# Backward Compatibility Aliases
+create_career_growth_graph = create_career_recommendation_chart
+create_skill_distribution_pie = create_skill_match_pie
+
 
