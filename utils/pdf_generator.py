@@ -17,8 +17,19 @@ class CareerReportPDF(FPDF):
         self.set_text_color(156, 163, 175)
         self.cell(0, 10, f"Page {self.page_no()} | Confidential Career Intelligence Report", align="C")
 
-def generate_pdf_report(user_data: dict, analysis_data: dict, output_path: str) -> str:
+from typing import Any
+
+def generate_pdf_report(user_data: Any, analysis_data: dict, output_path: str) -> str:
     """Generates a styled PDF report for downloadable career analysis."""
+    if isinstance(user_data, str):
+        user_data = {
+            "full_name": user_data,
+            "email": analysis_data.get("email", "N/A"),
+            "current_role": analysis_data.get("target_role") or analysis_data.get("recommended_career", "Software Engineer")
+        }
+    elif not isinstance(user_data, dict):
+        user_data = {}
+
     pdf = CareerReportPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -28,10 +39,14 @@ def generate_pdf_report(user_data: dict, analysis_data: dict, output_path: str) 
     pdf.set_text_color(31, 41, 55)
     pdf.cell(0, 8, "Candidate Profile Summary", ln=True)
 
+    full_name = user_data.get('full_name') or user_data.get('user_name', 'N/A')
+    email = user_data.get('email', 'N/A')
+    current_role = user_data.get('current_role') or user_data.get('target_role') or analysis_data.get('target_role', 'Software Engineer')
+
     pdf.set_font("Helvetica", "", 10)
-    pdf.cell(0, 6, f"Full Name: {user_data.get('full_name', 'N/A')}", ln=True)
-    pdf.cell(0, 6, f"Email: {user_data.get('email', 'N/A')}", ln=True)
-    pdf.cell(0, 6, f"Target Role: {user_data.get('current_role', 'Software Engineer')}", ln=True)
+    pdf.cell(0, 6, f"Full Name: {full_name}", ln=True)
+    pdf.cell(0, 6, f"Email: {email}", ln=True)
+    pdf.cell(0, 6, f"Target Role: {current_role}", ln=True)
     pdf.ln(4)
 
     # Scores Section
@@ -49,7 +64,7 @@ def generate_pdf_report(user_data: dict, analysis_data: dict, output_path: str) 
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(0, 8, "Extracted Skills & Competencies", ln=True)
     pdf.set_font("Helvetica", "", 10)
-    skills = analysis_data.get('extracted_skills', 'N/A')
+    skills = analysis_data.get('extracted_skills') or analysis_data.get('skills', 'N/A')
     if isinstance(skills, list):
         skills = ", ".join(skills)
     pdf.multi_cell(0, 6, f"Skills: {skills}")
@@ -60,22 +75,26 @@ def generate_pdf_report(user_data: dict, analysis_data: dict, output_path: str) 
     pdf.cell(0, 8, "Key Strengths", ln=True)
     pdf.set_font("Helvetica", "", 10)
     strengths = analysis_data.get('strengths', [])
-    if isinstance(strengths, list):
+    if isinstance(strengths, list) and strengths:
         for s in strengths:
             pdf.cell(0, 6, f"- {s}", ln=True)
-    else:
+    elif strengths:
         pdf.multi_cell(0, 6, str(strengths))
+    else:
+        pdf.cell(0, 6, "- Strong technical background", ln=True)
     pdf.ln(4)
 
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(0, 8, "Actionable Improvement Recommendations", ln=True)
     pdf.set_font("Helvetica", "", 10)
-    tips = analysis_data.get('improvement_tips', [])
-    if isinstance(tips, list):
+    tips = analysis_data.get('improvement_tips') or analysis_data.get('missing_skills', [])
+    if isinstance(tips, list) and tips:
         for t in tips:
             pdf.cell(0, 6, f"- {t}", ln=True)
-    else:
+    elif tips:
         pdf.multi_cell(0, 6, str(tips))
+    else:
+        pdf.cell(0, 6, "- Continue developing core competency skills", ln=True)
 
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     pdf.output(output_path)

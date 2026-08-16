@@ -1,6 +1,11 @@
+import sys
 import os
-import streamlit as st
 from pathlib import Path
+
+# Ensure config and sys.path are initialized before relative module imports
+import config
+
+import streamlit as st
 
 # Page Configuration
 st.set_page_config(
@@ -73,8 +78,17 @@ def main():
         st.rerun()
 
     if st.session_state["authenticated"]:
+        user_id = st.session_state.get("user_id")
         user_name = st.session_state.get("user_name", "User")
-        user_role = st.session_state.get("user_role", "user")
+
+        from auth.authorization import is_admin_user
+        if user_id and is_admin_user(user_id):
+            st.session_state["user_role"] = "admin"
+            user_role = "admin"
+        else:
+            st.session_state["user_role"] = "user"
+            user_role = "user"
+
         role_badge = "🛡️ Admin" if user_role == "admin" else "👤 Candidate"
         st.sidebar.caption(f"Logged in as: **{user_name}** ({role_badge})")
         st.sidebar.write("---")

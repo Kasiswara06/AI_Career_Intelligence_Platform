@@ -53,3 +53,12 @@ reports/analytics/*
 .vscode/
 .idea/
 *.swp
+
+.env
+.venv/
+venv/
+__pycache__/
+uploads/
+*.pyc
+database/ai_career.db
+.streamlit/secrets.toml

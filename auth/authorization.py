@@ -9,12 +9,13 @@ def is_admin_user(user_id: int) -> bool:
     if not user_id:
         return False
     
-    # Check session state cache first
-    if st.session_state.get("user_role") == "admin" and st.session_state.get("user_id") == user_id:
+    # Check session state cache first (case-insensitive)
+    session_role = str(st.session_state.get("user_role") or "").strip().lower()
+    if session_role == "admin" and st.session_state.get("user_id") == user_id:
         return True
         
     res = execute_query("SELECT role FROM users WHERE id = %s", (user_id,), fetchone=True)
-    if res and res.get("role") == "admin":
+    if res and str(res.get("role") or "").strip().lower() == "admin":
         return True
     return False
 

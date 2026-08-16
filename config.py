@@ -1,9 +1,16 @@
+import sys
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
 # Base Directory
 BASE_DIR = Path(__file__).resolve().parent
+
+# Ensure project root and assets directory are in sys.path for ai_models resolution
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+if str(BASE_DIR / "assets") not in sys.path:
+    sys.path.insert(0, str(BASE_DIR / "assets"))
 
 # Load environment variables from .env file
 load_dotenv(BASE_DIR / ".env", override=True)

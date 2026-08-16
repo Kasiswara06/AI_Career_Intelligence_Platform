@@ -43,5 +43,11 @@ class TestAdmin(unittest.TestCase):
             self.assertNotIn("password", log)
             self.assertNotIn("password_hash", log)
 
+    def test_role_case_insensitivity(self):
+        """Verifies that 'Admin', 'admin', and 'ADMIN' are all recognized as Admin roles."""
+        self.assertTrue(is_admin_user(6), "User #6 (kasiswara9392@gmail.com) with role 'Admin' must resolve to True")
+        self.assertTrue(is_admin_user(7), "User #7 (admin@careerintel.ai) with role 'admin' must resolve to True")
+        self.assertFalse(is_admin_user(1), "User #1 (user_1@example.com) with role 'user' must resolve to False")
+
 if __name__ == "__main__":
     unittest.main()

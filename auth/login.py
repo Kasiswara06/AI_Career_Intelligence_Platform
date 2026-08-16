@@ -29,7 +29,7 @@ def render_login_page():
             st.session_state["user_id"] = user["id"]
             st.session_state["user_name"] = user["full_name"]
             st.session_state["user_email"] = user["email"]
-            st.session_state["user_role"] = user.get("role", "user")
+            st.session_state["user_role"] = str(user.get("role", "user") or "user").strip().lower()
             st.session_state["remember_me"] = remember_me
 
             import uuid

@@ -40,5 +40,6 @@ def logout_session():
     st.session_state["user_id"] = None
     st.session_state["user_email"] = None
     st.session_state["user_name"] = None
+    st.session_state["user_role"] = None
     st.session_state["session_id"] = None
     st.session_state["current_page"] = "🏠 Home"
