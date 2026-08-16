@@ -50,19 +50,21 @@ def render_admin_dashboard_page():
     if not check_admin_access():
         st.error("🚫 **Access Denied: Admin Privileges Required**")
         st.warning("You must be logged in with an administrator account (`role = 'admin'`) to access this dashboard.")
-        st.info("💡 **Demo Admin Credentials**: Sign in with `admin@careerintel.ai` / `Admin@123456`.")
         return
 
+    admin_name = st.session_state.get("user_name", "Administrator")
+    admin_email = st.session_state.get("user_email", "")
+
     # Header Title Banner
-    st.markdown("""
+    st.markdown(f"""
     <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.95), rgba(15, 23, 42, 0.95)); padding: 22px 28px; border-radius: 14px; border: 1px solid rgba(59, 130, 246, 0.3); margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <h1 style="margin: 0; color: #f8fafc; font-size: 2.1rem; display: flex; align-items: center; gap: 10px;">
-                    🛡️ Admin Dashboard — Milestone 4 Management Console
+                    🛡️ Admin Dashboard — Platform Management Console
                 </h1>
                 <p style="color: #93c5fd; margin-top: 6px; font-size: 1rem;">
-                    Complete AI Platform Control: Candidate Management, Resume Parsing, Job Descriptions, ATS Intelligence, Skill Gaps, Feedback, and System Health.
+                    Logged in as: <b>{admin_name}</b> ({admin_email})
                 </p>
             </div>
             <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">
@@ -94,21 +96,21 @@ def render_admin_dashboard_page():
     
     k1, k2, k3, k4, k5, k6, k7, k8 = st.columns(8)
     with k1:
-        st.metric("Total Users", metrics["total_users"])
+        st.metric("Total Users", metrics.get("total_users", 0))
     with k2:
-        st.metric("Today's Users", metrics["today_users"])
+        st.metric("Total Admins", metrics.get("total_admins", 0))
     with k3:
-        st.metric("Total Logins", metrics["total_logins"])
+        st.metric("Total Candidates", metrics.get("total_candidates", 0))
     with k4:
-        st.metric("Today's Logins", metrics["today_logins"])
+        st.metric("New Users", metrics.get("today_users", 0))
     with k5:
-        st.metric("Total Resumes", metrics["total_resumes"])
+        st.metric("Total Logins", metrics.get("total_logins", 0))
     with k6:
-        st.metric("Analyses", metrics["total_analyses"])
+        st.metric("Total Resumes", metrics.get("total_resumes", 0))
     with k7:
-        st.metric("Job Matches", metrics["total_job_matches"])
+        st.metric("Analyses", metrics.get("total_analyses", 0))
     with k8:
-        st.metric("Active Users", metrics["active_users"])
+        st.metric("Active Users", metrics.get("active_users", 0))
 
     st.write("---")
 
@@ -183,9 +185,9 @@ def render_admin_dashboard_page():
 
             if users_list:
                 df_users = pd.DataFrame(users_list)
-                display_cols = ["user_id", "full_name", "email", "mobile", "role", "registered_date", "last_login", "login_count", "resume_status"]
+                display_cols = ["user_id", "full_name", "email", "role", "registered_date", "mobile", "last_login", "login_count", "resume_status"]
                 df_users_dsp = df_users[[c for c in display_cols if c in df_users.columns]]
-                df_users_dsp.columns = ["User ID", "Full Name", "Email", "Mobile", "Role", "Registered Date", "Last Login", "Logins", "Resume"]
+                df_users_dsp.columns = ["ID", "Full Name", "Email", "Role", "Created At", "Mobile", "Last Login", "Logins", "Resume Status"]
                 st.dataframe(df_users_dsp, use_container_width=True, hide_index=True)
 
                 st.write("---")

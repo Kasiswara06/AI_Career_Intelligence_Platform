@@ -8,7 +8,11 @@ def render_ats_analysis_page():
     st.header("🎯 AI ATS Resume Analysis & Job Description Match")
     st.caption("Module 10 & 11: Compare your active resume against target Job Descriptions to generate ATS compatibility, keyword match, and detected vs missing skill breakdown.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to run ATS Analysis.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
 
     # --------------------------------------------------------------------------

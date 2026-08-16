@@ -7,6 +7,10 @@ from ai_models.learning_recommendation import get_learning_recommendations
 def render_career_dashboard_page():
     """Renders comprehensive AI Career Analytics Dashboard with Plotly visuals."""
     user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view your Career Dashboard.")
+        st.stop()
+
     user_name = st.session_state.get("user_name", "User")
 
     st.markdown('<h1 class="gradient-text">AI Career Intelligence Analytics Dashboard</h1>', unsafe_allow_html=True)

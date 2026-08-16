@@ -17,7 +17,10 @@ def render_resume_management_page():
     st.title("📂 Professional Resume Management & Version Control")
     st.caption("Manage multiple resume versions, switch active resumes, inspect preview panels, and trigger automated AI re-analysis.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to access your Resume Management.")
+        st.stop()
 
     # Session State Control for Preview, Replace, and Delete Dialogs
     if "preview_resume_id" not in st.session_state:
@@ -25,41 +28,8 @@ def render_resume_management_page():
     if "confirm_delete_id" not in st.session_state:
         st.session_state["confirm_delete_id"] = None
 
-    # Fetch Resumes from DB
-    resumes_list = get_user_resumes(user_id)
-
-    # Demo Fallback if database has no resumes yet
-    if not resumes_list:
-        resumes_list = [
-            {
-                "id": 1,
-                "filename": "Internshala_Resume.pdf",
-                "file_path": "static/uploads/resumes/user_1_Internshala_Resume.pdf",
-                "file_type": ".pdf",
-                "file_size": "69.5 KB",
-                "version": 2,
-                "resume_score": 89,
-                "ats_score": 92,
-                "is_active": True,
-                "status": "Active",
-                "extracted_text": "Sample Resume Text: Final Year AI Resume Screening Project Candidate.",
-                "uploaded_at": "2026-08-05 11:54:00"
-            },
-            {
-                "id": 2,
-                "filename": "John_Doe_Archived_V1.docx",
-                "file_path": "static/uploads/resumes/user_1_John_Doe_Archived_V1.docx",
-                "file_type": ".docx",
-                "file_size": "142.0 KB",
-                "version": 1,
-                "resume_score": 78,
-                "ats_score": 82,
-                "is_active": False,
-                "status": "Archived",
-                "extracted_text": "Previous draft resume for Python developer role.",
-                "uploaded_at": "2026-08-03 09:30:00"
-            }
-        ]
+    # Fetch Resumes from DB strictly for logged-in user
+    resumes_list = get_user_resumes(user_id) or []
 
     # ----------------------------------------------------
     # SEARCH, FILTER & SORTING TOOLBAR
@@ -137,7 +107,13 @@ def render_resume_management_page():
     st.markdown(f"### 📑 Uploaded Resumes ({len(filtered_resumes)} Found)")
 
     if not filtered_resumes:
-        st.info("No resumes match your filter criteria.")
+        if not resumes_list:
+            st.info("ℹ️ **No resumes uploaded yet.** Upload your first resume to begin ATS Analysis, Skill Gap Analysis, and Job Matching.")
+            if st.button("📤 Upload Resume Now", type="primary", key="btn_upload_empty_state"):
+                st.session_state["current_page"] = "📄 Resume Upload"
+                st.rerun()
+        else:
+            st.info("No resumes match your filter criteria.")
 
     for res in filtered_resumes:
         res_id = res["id"]
@@ -223,12 +199,9 @@ def render_resume_management_page():
     
     history_logs = fetch_resume_version_history(user_id)
     if not history_logs:
-        history_logs = [
-            {"version": 2, "upload_date": "05-Aug-2026 11:54 AM", "action": "Replaced", "ats_score": 92, "status": "Active"},
-            {"version": 1, "upload_date": "03-Aug-2026 09:30 AM", "action": "Uploaded", "ats_score": 82, "status": "Archived"}
-        ]
-
-    st.table(history_logs)
+        st.info("No resume version history recorded yet.")
+    else:
+        st.table(history_logs)
 
 if __name__ == "__main__":
     render_resume_management_page()

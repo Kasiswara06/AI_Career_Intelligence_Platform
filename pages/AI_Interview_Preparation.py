@@ -139,7 +139,10 @@ def render_ai_interview_preparation_page():
     """
     Renders AI Interview Preparation Question Bank System.
     """
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to access AI Interview Preparation.")
+        st.stop()
 
     st.markdown('<h1 class="gradient-text">📚 AI Interview Preparation Question Bank</h1>', unsafe_allow_html=True)
     st.caption("Comprehensive domain-specific interview questions WITH complete model answers, simple explanations, code examples, key points, and delivery tips.")

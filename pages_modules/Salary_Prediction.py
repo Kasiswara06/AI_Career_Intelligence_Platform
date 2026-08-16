@@ -15,7 +15,10 @@ def render_salary_prediction_page():
     st.title("💰 AI Resume-Based Salary Prediction Engine")
     st.caption("Random Forest ML model predicting compensation based on candidate resume skills, education, experience, projects, and certifications.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Salary Predictions.")
+        st.stop()
 
     # Session State Control for Mode & File Upload
     if "override_upload" not in st.session_state:

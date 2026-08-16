@@ -53,11 +53,18 @@ def render_register_page():
 
         # Hash Password and Insert User
         pwd_hash = hash_password(password)
-        user_id = execute_query(
-            "INSERT INTO users (full_name, email, mobile, age, password_hash) VALUES (%s, %s, %s, %s, %s)",
-            (full_name.strip(), email.strip().lower(), mobile.strip(), int(age), pwd_hash),
-            commit=True
-        )
+        try:
+            user_id = execute_query(
+                "INSERT INTO users (full_name, fullname, email, mobile, age, password_hash) VALUES (%s, %s, %s, %s, %s, %s)",
+                (full_name.strip(), full_name.strip(), email.strip().lower(), mobile.strip(), int(age), pwd_hash),
+                commit=True
+            )
+        except Exception:
+            user_id = execute_query(
+                "INSERT INTO users (full_name, email, mobile, age, password_hash) VALUES (%s, %s, %s, %s, %s)",
+                (full_name.strip(), email.strip().lower(), mobile.strip(), int(age), pwd_hash),
+                commit=True
+            )
 
         if user_id:
             # Create matching initial profile

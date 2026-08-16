@@ -6,7 +6,11 @@ def render_career_recommendation_page():
     st.header("🚀 Career Recommendation")
     st.caption("Analyze education, skills, experience, career prediction, career roadmap, industry demand & career growth.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Career Recommendations.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
 
     skills = active_resume.get("skills", []) if active_resume else ["python", "sql", "machine learning"]

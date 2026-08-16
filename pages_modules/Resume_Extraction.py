@@ -6,7 +6,11 @@ def render_resume_extraction_page():
     st.header("📑 Resume Information Extraction")
     st.caption("Deep entity extraction detailing personal info, education, technical/soft skills, experience, and projects.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Resume Extraction.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
 
     if not active_resume:

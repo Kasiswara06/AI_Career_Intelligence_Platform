@@ -20,56 +20,53 @@ def get_dashboard_summary(user_id: int) -> Dict[str, Any]:
 
     # 1. Profile completion & basic details
     full_name = profile.get("full_name") or st.session_state.get("user_name", "Candidate")
-    profile_completion = int(profile.get("completion_percentage", 65 if user_id else 0))
+    profile_completion = int(profile.get("completion_percentage", 25 if profile else 0))
 
     # 2. Active Resume & ATS Scan
-    ats_score = 78
-    resume_score = 82
-    detected_skills = ["Python", "SQL", "Machine Learning", "Data Analysis", "Git", "REST APIs", "Streamlit"]
-    resume_summary = "Candidate with expertise in Python, SQL, ML models, and web applications."
+    ats_score = 0
+    resume_score = 0
+    detected_skills = []
+    resume_summary = "No active resume uploaded yet. Upload a resume to enable AI analysis and ATS evaluation."
     
     if active_resume:
+        ats_score = active_resume.get("ats_score", 0)
+        resume_score = active_resume.get("resume_score", 0)
         raw_text = active_resume.get("raw_text", "")
         if raw_text:
             ats_data = calculate_ats_score(raw_text)
-            ats_score = ats_data.get("ats_score", ats_score)
-            resume_score = ats_data.get("resume_score", resume_score)
+            ats_score = active_resume.get("ats_score") or ats_data.get("ats_score", 0)
+            resume_score = active_resume.get("resume_score") or ats_data.get("resume_score", 0)
             if ats_data.get("detected_skills"):
                 detected_skills = ats_data.get("detected_skills")
             if ats_data.get("summary"):
                 resume_summary = ats_data.get("summary")
-        if active_resume.get("ats_score"):
-            ats_score = active_resume.get("ats_score")
-        if active_resume.get("resume_score"):
-            resume_score = active_resume.get("resume_score")
     elif profile.get("skills"):
         detected_skills = [s.strip() for s in profile.get("skills").split(",") if s.strip()]
 
     # 3. Skill Gap Analysis
-    missing_skills = ["Docker", "Kubernetes", "AWS Cloud"]
-    skill_match_pct = 78.5
-    skill_gap_pct = 21.5
+    missing_skills = []
+    skill_match_pct = 0.0
+    skill_gap_pct = 0.0
     if detected_skills:
         target_jd_skills = ["Python", "SQL", "Machine Learning", "Data Analysis", "Git", "Docker", "Kubernetes", "AWS Cloud", "REST APIs", "PyTorch"]
         matching = [s for s in detected_skills if any(t.lower() in s.lower() or s.lower() in t.lower() for t in target_jd_skills)]
         missing = [t for t in target_jd_skills if not any(s.lower() in t.lower() or t.lower() in s.lower() for s in detected_skills)]
-        if missing:
-            missing_skills = missing[:5]
+        missing_skills = missing[:5] if missing else []
         if target_jd_skills:
             skill_match_pct = round((len(matching) / len(target_jd_skills)) * 100, 1)
             skill_gap_pct = round(100.0 - skill_match_pct, 1)
 
     # 4. Job Match Ranking
-    top_job_title = "AI / Machine Learning Engineer"
-    top_job_company = "TechCorp Solutions"
-    top_job_match_pct = 91.5
+    top_job_title = "N/A"
+    top_job_company = "N/A"
+    top_job_match_pct = 0.0
     
     try:
         db_matches = execute_query(
             "SELECT job_title, company, match_percentage FROM job_matching WHERE user_id = %s ORDER BY match_percentage DESC LIMIT 1",
             (user_id,), fetchone=True
         )
-        if db_matches:
+        if db_matches and isinstance(db_matches, dict):
             top_job_title = db_matches.get("job_title", top_job_title)
             top_job_company = db_matches.get("company", top_job_company)
             top_job_match_pct = float(db_matches.get("match_percentage", top_job_match_pct))
@@ -77,40 +74,45 @@ def get_dashboard_summary(user_id: int) -> Dict[str, Any]:
         pass
 
     # 5. Career & Course Recommendations
-    recommended_career = "Senior AI Engineer"
-    career_growth = "32% YoY Growth Rate"
+    recommended_career = profile.get("qualification") or "AI / Software Engineer"
+    career_growth = "Active Market Growth"
     rec_courses = recommend_courses(missing_skills) if missing_skills else []
-    if not rec_courses:
-        rec_courses = [
-            {"course_title": "Docker & Kubernetes Mastery", "platform": "Udemy", "target_skill": "Docker", "duration": "12 Hours", "link": "https://udemy.com"},
-            {"course_title": "AWS Certified Solutions Architect", "platform": "Coursera", "target_skill": "AWS Cloud", "duration": "24 Hours", "link": "https://coursera.org"},
-            {"course_title": "Deep Learning Specialization", "platform": "Coursera", "target_skill": "Deep Learning", "duration": "40 Hours", "link": "https://coursera.org"}
-        ]
 
     # 6. Expected Salary
-    exp_years = float(profile.get("experience_years", 1.5) or 1.5)
-    expected_salary = "$115,000 / yr"
-    min_salary = 90000
-    max_salary = 140000
-    predicted_salary_num = 115000
+    exp_years = float(profile.get("experience_years", 0) or 0)
+    expected_salary = "N/A"
+    min_salary = 0
+    max_salary = 0
+    predicted_salary_num = 0
     
-    if exp_years > 3:
-        min_salary, predicted_salary_num, max_salary = 120000, 145000, 175000
-        expected_salary = "$145,000 / yr"
-    elif exp_years > 5:
-        min_salary, predicted_salary_num, max_salary = 150000, 180000, 220000
-        expected_salary = "$180,000 / yr"
+    if active_resume or profile.get("skills"):
+        if exp_years > 5:
+            min_salary, predicted_salary_num, max_salary = 150000, 180000, 220000
+            expected_salary = "$180,000 / yr"
+        elif exp_years > 3:
+            min_salary, predicted_salary_num, max_salary = 120000, 145000, 175000
+            expected_salary = "$145,000 / yr"
+        else:
+            min_salary, predicted_salary_num, max_salary = 90000, 115000, 140000
+            expected_salary = "$115,000 / yr"
 
     # 7. AI Career Readiness Score
-    readiness_score = int(round((ats_score * 0.35) + (skill_match_pct * 0.35) + (profile_completion * 0.30)))
-    readiness_score = min(max(readiness_score, 40), 98)
+    if active_resume or detected_skills:
+        readiness_score = int(round((ats_score * 0.35) + (skill_match_pct * 0.35) + (profile_completion * 0.30)))
+        readiness_score = min(max(readiness_score, 0), 98)
+    else:
+        readiness_score = 0
 
     # 8. Resume Improvements Count / Tips
-    improvement_tips = [
-        "Include quantitative metrics (e.g. 'Improved efficiency by 30%') in project descriptions.",
-        "Add AWS Cloud & Docker containerization skills to boost ATS compatibility above 90%.",
-        "Publish live demo links for GitHub engineering projects."
-    ]
+    improvement_tips = []
+    if active_resume:
+        improvement_tips = [
+            "Include quantitative metrics (e.g. 'Improved efficiency by 30%') in project descriptions.",
+            "Add containerization & cloud skills to boost ATS compatibility.",
+            "Publish live demo links for engineering projects."
+        ]
+    else:
+        improvement_tips = ["Upload a resume to generate personalized AI improvement recommendations."]
 
     # 9. Recent Activities
     activities = []
@@ -121,13 +123,6 @@ def get_dashboard_summary(user_id: int) -> Dict[str, Any]:
         ) or []
     except Exception:
         pass
-
-    if not activities:
-        activities = [
-            {"action": "PROFILE_UPDATE", "details": "Profile details and technical skills saved.", "created_at": "Today"},
-            {"action": "RESUME_UPLOAD", "details": f"Active resume ({active_resume.get('filename', 'Resume.pdf') if active_resume else 'PDF'}) processed.", "created_at": "Yesterday"},
-            {"action": "ATS_SCAN", "details": f"ATS compatibility scan score: {ats_score}%", "created_at": "2 days ago"}
-        ]
 
     return {
         "user_name": full_name,

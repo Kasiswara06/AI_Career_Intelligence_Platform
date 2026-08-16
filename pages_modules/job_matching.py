@@ -45,7 +45,11 @@ def render_job_matching_page():
     </div>
     """, unsafe_allow_html=True)
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to access Job Matching.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
 
     input_tab1, input_tab2 = st.tabs(["📄 Candidate Resume", "💼 Job Description Input"])

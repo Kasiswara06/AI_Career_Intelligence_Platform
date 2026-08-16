@@ -7,7 +7,11 @@ def render_skill_gap_page():
     st.header("🧠 AI Skill Gap Analysis Engine")
     st.caption("Module 11: Compare your active resume skills against target Job Description requirements to identify detected vs missing skills & readiness score.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Skill Gap Analysis.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
     target_jd = st.session_state.get("active_target_jd", {})
 

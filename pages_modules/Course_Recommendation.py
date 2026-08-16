@@ -6,7 +6,11 @@ def render_course_recommendation_page():
     st.header("📚 Course & Certification Recommendations")
     st.caption("Module 14: Recommend targeted learning tracks from Coursera, Udemy, NPTEL, Infosys Springboard & Google Cloud Boost based on detected skill gaps.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Course Recommendations.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
     target_jd = st.session_state.get("active_target_jd", {})
 

@@ -8,7 +8,9 @@ def get_admin_kpi_metrics() -> Dict[str, int]:
     """
     Calculates executive KPI card metrics directly from MySQL/SQLite.
     - Total Users
-    - Today's Registrations
+    - Total Admins
+    - Total Candidates/Users
+    - Today's Registrations (New Users)
     - Total Logins
     - Today's Logins
     - Total Resumes
@@ -17,6 +19,8 @@ def get_admin_kpi_metrics() -> Dict[str, int]:
     - Active Users
     """
     total_users = 0
+    total_admins = 0
+    total_candidates = 0
     today_users = 0
     total_logins = 0
     today_logins = 0
@@ -33,9 +37,21 @@ def get_admin_kpi_metrics() -> Dict[str, int]:
         pass
 
     try:
-        res = execute_query("SELECT COUNT(id) as cnt FROM users WHERE DATE(created_at) = DATE('now')", fetchone=True)
-        if not res or res.get("cnt") == 0:
-            res = execute_query("SELECT COUNT(id) as cnt FROM users WHERE DATE(created_at) = CURRENT_DATE", fetchone=True)
+        res = execute_query("SELECT COUNT(id) as cnt FROM users WHERE LOWER(role) = 'admin'", fetchone=True)
+        if res:
+            total_admins = res.get("cnt", 0)
+    except Exception:
+        pass
+
+    try:
+        res = execute_query("SELECT COUNT(id) as cnt FROM users WHERE LOWER(role) != 'admin' OR role IS NULL", fetchone=True)
+        if res:
+            total_candidates = res.get("cnt", 0)
+    except Exception:
+        pass
+
+    try:
+        res = execute_query("SELECT COUNT(id) as cnt FROM users WHERE DATE(created_at) = CURRENT_DATE OR DATE(created_at) = DATE('now')", fetchone=True)
         if res:
             today_users = res.get("cnt", 0)
     except Exception:
@@ -53,9 +69,7 @@ def get_admin_kpi_metrics() -> Dict[str, int]:
         pass
 
     try:
-        res = execute_query("SELECT COUNT(login_id) as cnt FROM login_activity WHERE DATE(login_time) = DATE('now')", fetchone=True)
-        if not res or res.get("cnt") == 0:
-            res = execute_query("SELECT COUNT(login_id) as cnt FROM login_activity WHERE DATE(login_time) = CURRENT_DATE", fetchone=True)
+        res = execute_query("SELECT COUNT(login_id) as cnt FROM login_activity WHERE DATE(login_time) = CURRENT_DATE OR DATE(login_time) = DATE('now')", fetchone=True)
         if res:
             today_logins = res.get("cnt", 0)
     except Exception:
@@ -90,29 +104,32 @@ def get_admin_kpi_metrics() -> Dict[str, int]:
         pass
 
     return {
-        "total_users": max(total_users, 1),
+        "total_users": total_users,
+        "total_admins": total_admins,
+        "total_candidates": total_candidates,
         "today_users": today_users,
-        "total_logins": max(total_logins, 1),
+        "total_logins": total_logins,
         "today_logins": today_logins,
         "total_resumes": total_resumes,
         "total_analyses": total_analyses,
         "total_job_matches": total_job_matches,
-        "active_users": max(active_users, 1)
+        "active_users": active_users
     }
 
 
 def get_admin_users_list(search_query: str = "", date_filter: str = "All", resume_filter: str = "All") -> List[Dict[str, Any]]:
     """
     Fetches user table records for admin display.
-    SECURITY GUARANTEE: Explicitly SELECTS only safe columns and scrubs password/hash fields completely.
+    Guarantees compatibility with both full_name and fullname columns in ai_career.users table.
+    SECURITY GUARANTEE: Explicitly SELECTS safe columns and scrubs password/hash fields completely.
     """
     sql = """
     SELECT 
         u.id as user_id,
-        u.full_name,
+        COALESCE(NULLIF(u.full_name, ''), NULLIF(u.fullname, ''), u.email) as full_name,
         u.email,
-        u.mobile,
-        u.role,
+        COALESCE(NULLIF(u.mobile, ''), 'N/A') as mobile,
+        COALESCE(NULLIF(u.role, ''), 'user') as role,
         u.created_at as registered_date,
         (SELECT MAX(login_time) FROM login_activity WHERE user_id = u.id) as last_login,
         (SELECT COUNT(login_id) FROM login_activity WHERE user_id = u.id) as login_count,
@@ -120,17 +137,16 @@ def get_admin_users_list(search_query: str = "", date_filter: str = "All", resum
         (SELECT filename FROM resumes WHERE user_id = u.id ORDER BY is_active DESC, uploaded_at DESC LIMIT 1) as resume_name,
         (SELECT MAX(created_at) FROM activity_logs WHERE user_id = u.id) as last_activity
     FROM users u
-    ORDER BY u.created_at DESC
+    ORDER BY u.id DESC
     """
     
     users = execute_query(sql, fetchall=True) or []
     
     formatted = []
     for u in users:
-        # Scrub passwords just in case
         u_clean = sanitize_user_dict_for_admin(u)
         
-        name = u_clean.get("full_name") or "User"
+        name = u_clean.get("full_name") or u_clean.get("fullname") or "User"
         email = u_clean.get("email") or ""
         
         # Apply Search Filter
@@ -139,11 +155,14 @@ def get_admin_users_list(search_query: str = "", date_filter: str = "All", resum
             if sq not in name.lower() and sq not in email.lower():
                 continue
                 
-        r_status = u_clean.get("resume_status") or "No Resume"
+        r_status = u_clean.get("resume_status")
+        if not r_status:
+            r_status = "No Resume"
+
         if resume_filter != "All":
-            if resume_filter == "With Active Resume" and "Active" not in r_status:
+            if resume_filter == "With Active Resume" and r_status == "No Resume":
                 continue
-            elif resume_filter == "No Resume" and "No Resume" not in r_status:
+            elif resume_filter == "No Resume" and r_status != "No Resume":
                 continue
 
         formatted.append({
@@ -573,10 +592,10 @@ def get_skill_gap_analytics() -> Dict[str, Any]:
     
     # Calculate average readiness score
     avg_readiness = execute_query("SELECT AVG(career_readiness_score) as avg_score FROM skill_gap", fetchone=True) or {}
-    score_val = round(avg_readiness.get("avg_score") or 76.5, 1)
+    score_val = round(avg_readiness.get("avg_score") or 0.0, 1)
 
     return {
-        "top_missing_skills": top_missing if top_missing else [("Docker", 12), ("Kubernetes", 10), ("AWS", 9), ("GraphQL", 7), ("CI/CD", 6), ("PyTorch", 5)],
+        "top_missing_skills": top_missing,
         "total_analyzed_gaps": len(records),
         "average_readiness_score": score_val
     }
@@ -586,13 +605,10 @@ def get_ats_score_analytics() -> Dict[str, Any]:
     """Calculates ATS score distributions across uploaded candidate resumes."""
     records = execute_query("SELECT ats_score FROM resume_analysis WHERE ats_score IS NOT NULL", fetchall=True) or []
     scores = [r.get("ats_score", 0) for r in records]
-    
-    if not scores:
-        scores = [85, 78, 92, 64, 88, 72, 90, 81]
 
-    avg_score = round(sum(scores) / len(scores), 1) if scores else 82.5
-    high_score = max(scores) if scores else 98
-    low_score = min(scores) if scores else 60
+    avg_score = round(sum(scores) / len(scores), 1) if scores else 0.0
+    high_score = max(scores) if scores else 0
+    low_score = min(scores) if scores else 0
 
     poor = sum(1 for s in scores if s < 60)
     fair = sum(1 for s in scores if 60 <= s < 75)
@@ -629,7 +645,7 @@ def get_career_recommendation_analytics() -> Dict[str, Any]:
 
     return {
         "total_career_recommendations": max(total_recs, len(roles)),
-        "top_target_roles": top_roles if top_roles else [("AI Engineer", 18), ("Data Scientist", 14), ("Full Stack Developer", 12), ("Cloud Architect", 8)]
+        "top_target_roles": top_roles
     }
 
 
@@ -638,11 +654,11 @@ def get_job_match_analytics() -> Dict[str, Any]:
     matches = execute_query("SELECT match_percentage, job_title FROM job_matching", fetchall=True) or []
     if not matches:
         return {
-            "total_matches": 15,
-            "avg_match_pct": 84.2,
-            "high_match_count": 10,
-            "med_match_count": 4,
-            "low_match_count": 1
+            "total_matches": 0,
+            "avg_match_pct": 0.0,
+            "high_match_count": 0,
+            "med_match_count": 0,
+            "low_match_count": 0
         }
     
     pcts = [float(m.get("match_percentage", 0.0)) for m in matches]

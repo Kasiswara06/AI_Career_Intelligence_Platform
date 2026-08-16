@@ -104,14 +104,17 @@ def get_user_active_resume(user_id: int) -> Optional[Dict[str, Any]]:
         # Fallback to newest resume if no active flag set
         active = execute_query("SELECT * FROM resumes WHERE user_id = %s ORDER BY uploaded_at DESC LIMIT 1", (user_id,), fetchone=True)
 
-    if active:
+    if not isinstance(active, dict):
+        active = dict(active) if hasattr(active, 'keys') else None
+
+    if isinstance(active, dict):
         file_p = active.get("resume_path") or active.get("file_path", "")
         file_n = active.get("resume_name") or active.get("filename", "Candidate_Resume")
         parsed = parse_resume_complete(file_p, fallback_name=Path(file_n).stem) if file_p else {}
         
         return {
-            "id": active["id"],
-            "resume_id": active["id"],
+            "id": active.get("id", 1),
+            "resume_id": active.get("id", 1),
             "resume_name": file_n,
             "filename": file_n,
             "resume_path": file_p,

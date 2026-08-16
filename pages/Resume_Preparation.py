@@ -53,7 +53,10 @@ SECTION_LABELS = {
 }
 
 def render_resume_preparation_page():
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to access AI Resume Preparation.")
+        st.stop()
 
     # Main Header
     st.markdown('<h1 class="gradient-text">📄 AI Resume Preparation & Resume Builder</h1>', unsafe_allow_html=True)

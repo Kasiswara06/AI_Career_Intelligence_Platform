@@ -23,7 +23,10 @@ def render_resume_analysis_page():
     st.title("⚡ Professional AI Resume Analysis & Career Intelligence")
     st.caption("Commercial-grade ATS Resume Parser, NLP Entity Extraction, Semantic Job Matching, Salary Predictor & Improvement Engine.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Resume Analysis.")
+        st.stop()
     
     # Session state active analysis cache
     if "analysis_data" not in st.session_state:
@@ -60,7 +63,7 @@ def render_resume_analysis_page():
             # Trigger analysis refresh
             st.session_state["analysis_data"] = run_comprehensive_resume_analysis(active_resume, resume_id=active_resume.get("id", 1), user_id=user_id)
 
-    if not active_resume and not st.session_state.get("analysis_data"):
+    if not isinstance(active_resume, dict):
         # Default mock sample for demonstration if no resume uploaded yet
         default_parsed = parse_resume_complete("", fallback_name="John Doe (Candidate)")
         active_resume = {
@@ -72,7 +75,7 @@ def render_resume_analysis_page():
             "parsed": default_parsed
         }
         st.session_state["analysis_data"] = run_comprehensive_resume_analysis(active_resume, user_id=user_id)
-    elif active_resume and not st.session_state.get("analysis_data"):
+    elif not st.session_state.get("analysis_data"):
         st.session_state["analysis_data"] = run_comprehensive_resume_analysis(active_resume, user_id=user_id)
 
     analysis = st.session_state["analysis_data"]

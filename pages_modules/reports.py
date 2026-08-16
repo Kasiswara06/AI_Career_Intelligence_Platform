@@ -8,7 +8,11 @@ def render_reports_page():
     st.header("📋 Comprehensive Reports & Export Center")
     st.caption("Module 24: Generate, view, and export individual PDF or Excel reports for Resume Analysis, ATS Scoring, Job Matching, Skill Gap, Career Guidance, and Salary Predictions.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to access Reports & Exports.")
+        st.stop()
+
     summary = get_dashboard_summary(user_id)
     user_name = summary.get("user_name", st.session_state.get("user_name", "Candidate"))
 

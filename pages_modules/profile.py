@@ -11,7 +11,10 @@ def render_profile_page():
     st.header("👤 Comprehensive Candidate Profile")
     st.caption("Manage your Personal Details, Education, Skills, Projects, Certificates, Active Resume, and Professional Links.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view and edit your profile.")
+        st.stop()
     
     # Fetch full candidate profile
     profile = get_full_user_profile(user_id) or {}

@@ -34,7 +34,11 @@ def render_gauge_chart(score: float, title: str, bar_color: str = "#38bdf8") -> 
     return fig
 
 def render_dashboard_page():
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view your Candidate Dashboard.")
+        st.stop()
+
     summary = get_dashboard_summary(user_id)
 
     # Header Title Banner

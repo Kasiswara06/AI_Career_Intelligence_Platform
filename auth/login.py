@@ -25,6 +25,7 @@ def render_login_page():
             return
 
         if check_password(password, user["password_hash"]):
+            st.session_state.clear()
             st.session_state["authenticated"] = True
             st.session_state["user_id"] = user["id"]
             st.session_state["user_name"] = user["full_name"]

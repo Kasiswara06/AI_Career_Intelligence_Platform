@@ -18,7 +18,10 @@ def render_ai_career_assistant_page():
     st.title("🤖 AI Career Assistant & Real-Time Chatbot")
     st.caption("Powered by Google Gemini / OpenAI / Ollama / Platform NLP Engine with multi-turn memory, context awareness, and date-grouped history.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to access the AI Career Assistant.")
+        st.stop()
 
     # Session State Initialization
     if "current_session_id" not in st.session_state:

@@ -6,8 +6,18 @@ def render_resume_improvement_page():
     st.header("✨ Resume Improvement Suggestions (Module 6)")
     st.caption("Improve resume summary, missing keywords, ATS optimization, project suggestions, certification suggestions & formatting tips.")
 
-    user_id = st.session_state.get("user_id", 1)
+    user_id = st.session_state.get("user_id")
+    if not user_id:
+        st.warning("🔒 Please log in to view Resume Improvements.")
+        st.stop()
+
     active_resume = get_user_active_resume(user_id)
+    if not active_resume:
+        st.info("ℹ️ No active resume found. Please upload a resume first to generate personalized improvement recommendations.")
+        if st.button("📤 Upload Resume", type="primary"):
+            st.session_state["current_page"] = "📄 Resume Upload"
+            st.rerun()
+        st.stop()
 
     raw_text = active_resume.get("raw_text", "") if active_resume else ""
     detected_skills = active_resume.get("skills", ["python", "sql"]) if active_resume else ["python", "sql"]

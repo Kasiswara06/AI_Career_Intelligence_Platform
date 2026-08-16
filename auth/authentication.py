@@ -36,6 +36,7 @@ def logout_session():
             record_logout_activity(user_id, sess_id)
         except Exception:
             pass
+    st.session_state.clear()
     st.session_state["authenticated"] = False
     st.session_state["user_id"] = None
     st.session_state["user_email"] = None
