@@ -62,3 +62,8 @@ uploads/
 *.pyc
 database/ai_career.db
 .streamlit/secrets.toml
+
+__pycache__/
+*.pyc
+.env
+.streamlit/secrets.toml
